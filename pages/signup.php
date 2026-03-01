@@ -2,29 +2,8 @@
 // Signup Page
 include "middleware/guest.php";  // <-- middleware: logged in users can't access
 
-$error = "";
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name     = $_POST["name"];
-    $email    = $_POST["email"];
-    $password = $_POST["password"];
-
-    if (file_exists("users.txt")) {
-        $lines = file("users.txt");
-        foreach ($lines as $line) {
-            $data = explode("|", trim($line));
-            if ($data[1] == $email) {
-                $error = "This email is already registered!";
-            }
-        }
-    }
-
-    if ($error == "") {
-        $user = $name . "|" . $email . "|" . $password . "\n";
-        file_put_contents("users.txt", $user, FILE_APPEND);
-        header("Location: index.php?page=login&success=1");
-        exit;
-    }
-}
+$error = isset($_SESSION["signup_error"]) ? $_SESSION["signup_error"] : "";
+unset($_SESSION["signup_error"]);
 ?>
 
 <div class="box">

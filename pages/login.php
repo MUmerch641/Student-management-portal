@@ -2,31 +2,12 @@
 // Login Page
 include "middleware/guest.php";  // <-- middleware: logged in users can't access
 
-$error = "";
-$success = "";
+$error = isset($_SESSION["login_error"]) ? $_SESSION["login_error"] : "";
+unset($_SESSION["login_error"]); // clear it after reading
 
+$success = "";
 if (isset($_GET["success"])) {
     $success = "Account created! Please login.";
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email    = $_POST["email"];
-    $password = $_POST["password"];
-
-    if (file_exists("users.txt")) {
-        $lines = file("users.txt");
-        foreach ($lines as $line) {
-            $data = explode("|", trim($line));
-            if ($data[1] == $email && $data[2] == $password) {
-                $_SESSION["user"] = $data[0];
-                $_SESSION["email"] = $data[1];
-                header("Location: index.php?page=dashboard");
-                exit;
-            }
-        }
-    }
-
-    $error = "Wrong email or password!";
 }
 ?>
 
